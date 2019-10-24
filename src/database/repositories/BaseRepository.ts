@@ -16,7 +16,7 @@ export default class BaseRepository<T> {
     this.models.push(data).write();
   }
 
-  findById(id: number): NonFunctionProperties<T> {
+  findById(id: string): NonFunctionProperties<T> | null {
     return this.models.find({ id }).value();
   }
 
@@ -24,11 +24,11 @@ export default class BaseRepository<T> {
     return this.models.value();
   }
 
-  update(id: number, data: Partial<NonFunctionProperties<T>>): void {
+  update(id: string, data: Partial<NonFunctionProperties<T>>): void {
     this.models.find({ id }).assign(data).write();
   }
 
-  delete(id: number): void {
+  delete(id: string): void {
     this.models.remove({ id }).write();
   }
 }

@@ -3,37 +3,39 @@ import Book from '../models/Book';
 import { NonFunctionProperties } from '../types';
 
 export default class BookService {
-  bookRepository: BookRepository;
+  bookRepository = new BookRepository();
 
-  constructor() {
-    this.bookRepository = new BookRepository();
-  }
-
-  create(id: number, title: string, author: string): Book {
+  create(id: string, title: string, author: string): Book {
     const book = new Book(id, title, author);
     this.bookRepository.create(book.toJSON());
     return book;
   }
 
-  findById(id: number): Book {
-    const book = Book.fromData(this.bookRepository.findById(id));
-    return book;
+  findById(id: string): Book | null {
+    const data = this.bookRepository.findById(id);
+    if (data) {
+      const book = Book.fromData(data);
+      return book;
+    }
+    return null;
   }
 
   getAll(): Array<Book> {
-    const books = this.bookRepository.getAll();
-    return books.map(Book.fromData);
+    const data = this.bookRepository.getAll();
+    const books = data.map(Book.fromData);
+    return books;
   }
 
-  update(id: number, data: Partial<NonFunctionProperties<Book>>): Book {
-    const book = Book.fromData(this.bookRepository.findById(id));
-    book.title = data.title || book.title;
-    book.author = data.author || book.author;
-    this.bookRepository.update(id, book.toJSON());
-    return book;
+  update(id: string, newData: Partial<NonFunctionProperties<Book>>): void {
+    const data = this.bookRepository.findById(id);
+    if (data) {
+      const book = Book.fromData(data);
+      Object.assign(book, newData);
+      this.bookRepository.update(id, book.toJSON());
+    }
   }
 
-  delete(id: number): void {
-    console.log(this.bookRepository.delete(id));
+  delete(id: string): void {
+    this.bookRepository.delete(id);
   }
 }

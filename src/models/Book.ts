@@ -1,7 +1,7 @@
 import { NonFunctionProperties } from '../types';
 
 export default class Book {
-  id: number;
+  id: string;
 
   title: string;
 
@@ -11,7 +11,7 @@ export default class Book {
     return new Book(data.id, data.title, data.author);
   }
 
-  constructor(id: number, title: string, author: string) {
+  constructor(id: string, title: string, author: string) {
     this.id = id;
     this.title = title;
     this.author = author;
